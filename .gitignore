@@ -1,0 +1,15 @@
+# Editors and the operating system
+.DS_Store
+.idea/
+.vscode/
+*.swp
+
+# Anything an environment provides rather than the repository:
+# `backend/.gitignore` and `web/.gitignore` carry the per-tree rules
+# (.venv, node_modules, db.sqlite3, dist, media, staticfiles).
+.env
+*.log
+
+# Generated from the running backend, not committed - `manage.py spectacular`
+# writes it and the web client generates its API types from the live schema.
+schema.yml
