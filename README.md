@@ -19,6 +19,7 @@ cd backend
 .venv/bin/python manage.py migrate
 .venv/bin/python manage.py seed_reference   # roles, capabilities, org types, checks
 .venv/bin/python manage.py seed_demo        # the pilot dataset
+.venv/bin/python manage.py seed_accounts    # the people; prints their passwords once
 .venv/bin/python manage.py runserver 8000
 
 # terminal 2
@@ -41,7 +42,9 @@ reach the backend.
 - **Sessions.** OneID at the front, JWT behind it, the access token in memory
   and the refresh token in an httpOnly cookie. OneID itself is not connected:
   the backend's stub adapter resolves a seeded person and says so in every
-  session it issues.
+  session it issues. Until it is, `manage.py seed_accounts` issues real
+  accounts - three to six roles at each kind of organisation - and the sign-in
+  screen takes a username and password.
 - **Web**: three-language i18n, theme, a party-scoped session store and two
   route guards, the app shell, and a module manifest that generates the
   platform view's navigation, routes and placeholder pages.
@@ -76,6 +79,15 @@ its endpoint is the next piece of work.
 
 Also missing: the offline field-capture PWA, and row-level security in
 PostgreSQL (scoping is enforced in the application layer today).
+
+## Putting it on a server
+
+`backend/README.md` has the sequence, the four settings that are easy to get
+wrong, and what each looks like when it is wrong. In short: `DEBUG=False` and a
+real `DJANGO_SECRET_KEY`, `DATABASE_URL` pointing at PostgreSQL,
+`manage.py check --deploy` reporting nothing, gunicorn behind a web server that
+terminates TLS, and `web/dist` served with every unknown path rewritten to
+`index.html`.
 
 ## The rules worth not breaking
 
