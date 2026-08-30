@@ -38,7 +38,7 @@ reach the backend.
   being a status, no cluster holds a foreign key into another, and quantities
   are grams while money is minor units plus a currency. Every panel screen is
   served by it, permissions are capability-based, and reads of a lot passport
-  are written to the audit log. 48 backend tests pass.
+  are written to the audit log. 109 backend tests pass.
 - **Sessions.** OneID at the front, JWT behind it, the access token in memory
   and the refresh token in an httpOnly cookie. OneID itself is not connected:
   the backend's stub adapter resolves a seeded person and says so in every
@@ -48,6 +48,28 @@ reach the backend.
 - **Web**: three-language i18n, theme, a party-scoped session store and two
   route guards, the app shell, and a module manifest that generates the
   platform view's navigation, routes and placeholder pages.
+- **The assistant in the panels.** A corner panel on all forty-four operator
+  screens, in all three languages, answering as Claude from the operator's own
+  records. It exists for the questions the screens cannot answer in one place:
+  "which of my lots are pledged and go off this month" is the lot table, the
+  lien register and a date filter - three screens today, one question here. Its
+  four tools are scoped by the same `visible_lots` the screens use, so a bank
+  sees the lot it lent against and not the farm's other nine. It reads and
+  never writes. And opening a lot passport through it is written to the audit
+  log under the operator's own name, because "who looked at my lot" is a
+  question this platform answers and being asked through an assistant is not an
+  exemption.
+- **The assistant on the public website.** A panel in the corner of all eleven
+  pages, in all three languages, answering as Claude. What it knows is bounded
+  and reviewable: a written brief describing the programme, the catalogue as it
+  is recorded today, and two tools that call the same two open endpoints the
+  site's own hero card and comparison chart call. Ask it where lot
+  `AZ-2026-SMQ-0412` is and it reads the public passport in front of you, says
+  so while it is reading, and hands you the record rather than a summary of it
+  - which is the site's argument, made by the widget. It can reach nothing
+  behind a sign-in, because the function it calls is the one that answers an
+  anonymous browser. Nothing anyone types is stored. Without an
+  `ANTHROPIC_API_KEY` it prints one line saying it is not connected.
 - **The public website**, built from its own approved prototype: eleven pages
   at `/`, three languages, light and dark. Its copy and catalogue are content
   (`web/src/lib/site-data.ts`); the lot card in the hero and the ZEROCO
@@ -79,6 +101,11 @@ its endpoint is the next piece of work.
 
 Also missing: the offline field-capture PWA, and row-level security in
 PostgreSQL (scoping is enforced in the application layer today).
+
+**The assistants need a key.** `ANTHROPIC_API_KEY` is the only setting either
+of them takes. Without one the website and the panels run exactly as before and
+both widgets say, in one line, that the assistant is not connected - the same
+rule the OneID stub follows, for the same reason.
 
 ## Putting it on a server
 
