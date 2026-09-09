@@ -38,7 +38,7 @@ reach the backend.
   being a status, no cluster holds a foreign key into another, and quantities
   are grams while money is minor units plus a currency. Every panel screen is
   served by it, permissions are capability-based, and reads of a lot passport
-  are written to the audit log. 109 backend tests pass.
+  are written to the audit log. 149 backend tests pass.
 - **Sessions.** OneID at the front, JWT behind it, the access token in memory
   and the refresh token in an httpOnly cookie. OneID itself is not connected:
   the backend's stub adapter resolves a seeded person and says so in every
@@ -53,8 +53,10 @@ reach the backend.
   records. It exists for the questions the screens cannot answer in one place:
   "which of my lots are pledged and go off this month" is the lot table, the
   lien register and a date filter - three screens today, one question here. Its
-  four tools are scoped by the same `visible_lots` the screens use, so a bank
-  sees the lot it lent against and not the farm's other nine. It reads and
+  fourteen tools cover every cluster - lots, storage, the gate, conditions,
+  quality, the trials, finance, insurance and logistics - and each is scoped by
+  the same helpers the screens use, so a bank sees the lot it lent against and
+  not the farm's other nine. It reads and
   never writes. And opening a lot passport through it is written to the audit
   log under the operator's own name, because "who looked at my lot" is a
   question this platform answers and being asked through an assistant is not an
